@@ -1,0 +1,58 @@
+﻿@page "/Add"
+
+@using CustomersDemo.UI.Services
+@inject ICustomersServices customerServices
+@inject NavigationManager navigationManager
+
+<h1>Customers Detail</h1>
+
+<EditForm Model="@customer">
+    <table class="table">
+        <tr>
+            <td>
+                <label>FirstName</label>
+            </td>
+            <td>
+                <input class="form-control" type="text" @bind="customer.FirstName" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>LastName</label>
+            </td>
+            <td>
+                <input class="form-control" type="text" @bind="customer.LastName" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Age</label>
+            </td>
+            <td>
+                <input class="form-control" type="number" @bind="customer.Age" />
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="text-align:center">
+                <input type="submit" value="save" @onclick="saveCustomer" />
+                <input type="button" value="cancel" @onclick="cancel" />
+            </td>
+        </tr>
+    </table>
+</EditForm>
+
+@code {
+    public Customer customer = new Customer();
+
+    public async Task saveCustomer()
+    {
+        await customerServices.InsertCustomer(customer);
+        navigationManager.NavigateTo("/Customers");
+    }
+    public void cancel()
+    {
+        navigationManager.NavigateTo("/Customers");
+    }
+
+}
+

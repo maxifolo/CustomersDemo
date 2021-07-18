@@ -1,0 +1,56 @@
+﻿@page "/Customers"
+
+@using Services
+@inject ICustomersServices customersServices
+
+<h1>CustomersDemo</h1>
+<div>
+    <a href="/Add">Add new customer</a>
+</div>
+
+@if (customers == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>FirstName</th>
+                <th>LastName</th>
+                <th>Age</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Customer customer in customers)
+            {
+                <tr>
+                    <td>@customer.Id</td>
+                    <td>@customer.FirstName</td>
+                    <td>@customer.LastName</td>
+                    <td>@customer.Age</td>
+                    <td> <a href="/Detail/@customer.Id">edit</a> </td>
+                    <td> <button class="btn btn-danger" @onclick="@(() => delete(@customer.Id))">delete</button> </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    private List<Customer> customers { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        customers = await customersServices.GetAllCustomersAsync();
+    }
+    protected async Task delete(Guid Id)
+    {
+        await customersServices.DeleteCustomerById(Id);
+        customers = await customersServices.GetAllCustomersAsync();
+    }
+}
